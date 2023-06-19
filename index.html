@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>lab7</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"
+            integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
+            crossorigin="anonymous" defer>
+    </script>
+
+    <script src="index.js" defer></script>
+
+</head>
+<body>
+    <div>
+        <canvas id="canvas" width="1280" height="660"></canvas>
+    </div>
+
+    <div>
+        
+        <input type="checkbox" id="ambientLightToggle" checked>
+        <label for="ambientLightToggle">Фоновый свет</label>
+
+        <input type="checkbox" id="spotlight1Toggle" checked>
+        <label for="spotlight1Toggle">Фонарь 1</label>
+
+        <input type="checkbox" id="spotlight2Toggle" checked>
+        <label for="spotlight2Toggle">Фонарь 2</label>
+    
+        <input type="checkbox" id="headlightsToggle" checked>
+    <label for="headlightsToggle">Фары</label>
+    </div>
+
+
+
+    <div>
+        <img src="./sprites/trainrzd.jpg" id="texTrain" wigth="0" height="0">
+        <img src="./sprites/railway.jpg" id="texRailway" wigth="0" height="0">
+        <img src="./sprites/beton.jpg" id="texBeton" wigth="0" height="0">
+        <img src="./sprites/trava.jpg" id="texTrava" wigth="0" height="0">
+        <img src="./sprites/grey-concrete-texture.jpg" id="texLamp" wigth="0" height="0">
+    </div>
+</body>
+</html>

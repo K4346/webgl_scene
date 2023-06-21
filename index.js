@@ -12,7 +12,6 @@ class Parser {
       } else{
         this.parseModel();
       }
-    
     }
 
     parseFloorModel(){
@@ -242,7 +241,6 @@ void main(void) {
     }
    
     if (uSpotLights2Toggle){
-        // Вычисляем освещение от точечного источника света
         vec3 pointPos=vec3(7.0, 0.0, -18.0);
         vec3 pointLightDirection = normalize(pointPos - positionEye3);
         float pointLightDistance = length(pointPos - positionEye3);
@@ -255,7 +253,6 @@ void main(void) {
 
 
     if (uSpotLights1Toggle){
-    // Вычисляем освещение от точечного источника света
     vec3 pointPos2=vec3(-5.0, 0.0, -18.0);
     vec3 pointLightDirection2 = normalize(pointPos2 - positionEye3);
     float pointLightDistance2 = length(pointPos2 - positionEye3);
@@ -266,26 +263,18 @@ void main(void) {
     light += pointLight2;
     }
 
-    // // Вычисляем освещение от фары c использованием угла и направления
-    // vec3 lightStart=vec3(0, -4, 14);
-    // vec3 spotLightDirection = normalize(lightStart - vec3(7, -4, 14));
-    // float spotLightAngleCosine = 0.5;
-    // float spotLightDot = dot(-spotLightDirection, normalize(lightStart));
-    // float spotLightFactor = smoothstep(spotLightAngleCosine, 1.0, spotLightDot);
-    // float spotLight = phong(vNormal, spotLightDirection,positionEye3, spotLightFactor,16.0);
-    // // light += spotLight;
 
     if (uHeadlightsToggle){
-    vec3 pointPos3 = vec3(0.0, 0.0, -15.0);
-    vec3 pointLightDirection3 = normalize(uHeadlights - positionEye3);
+    vec3 pointPos3 = vec3(7, -3.95, -14);
+    vec3 pointLightDirection3 = normalize(uHeadlights - pointPos3);
     float pointLightDistance3 = length(uHeadlights - positionEye3);
-    float pointLightIntensity3 = falloff(pointLightDistance3, 7.0);
+    float pointLightIntensity3 = falloff(pointLightDistance3, 5.0);
 
     // Измените направление света для создания эффекта света из фар
-    vec3 lightDirection3 = vec3(-1.0, 0.0, .0);
+    vec3 lightDirection3 = vec3(-1.0, -1.0, 1.0);
 
     // Измените интенсивность света, чтобы управлять яркостью фар
-    float lightIntensity3 = pointLightIntensity3 * 3.0;
+    float lightIntensity3 = pointLightIntensity3 * 5.0;
 
     light += phong(vNormal, lightDirection3, positionEye3, lightIntensity3, 32.0);
     }
@@ -357,8 +346,6 @@ class Scene {
         requestAnimationFrame(render);
     }
 
- 
-
     drawScene(textures) {
         this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         this.gl.clearDepth(1.0);
@@ -392,20 +379,20 @@ class Scene {
             ];
             this.objects.forEach(obj => {
                 var modelViewMatrix = mat4.create();
+
+
+                obj.toPosition(modelViewMatrix);
+
                 if(obj.type=="Railway"){
                     obj.rotate(modelViewMatrix, -90*3.14/180, [0, 1, 0])
-                    mat4.translate(modelViewMatrix, modelViewMatrix, [-9.0, 0.0, 24.0]);
                 }
                 if(obj.type=="Train"){
                     obj.rotate(modelViewMatrix, 90*3.14/180, [0, 1, 0])
-                 //   mat4.translate(modelViewMatrix, modelViewMatrix, [10.0, 0.0, 0.0]);
-                 const distance =barrierCenter[0]-trainCenter[2];
-                    if(((distance < 5.5) && speed>0) || ((trainCenter[2] < -16.0) && speed<0)) speed = 0;
-                    trainCenter[2]+=speed;
+                 const distance =barrierCenter[0]-trainCenter[0];
+                    if(((distance < 5.5) && speed>0) || ((trainCenter[0] < -15.0) && speed<0)) speed = 0;
+                    trainCenter[0]+=speed;
                     obj.position = trainCenter;
-                }
-                obj.toPosition(modelViewMatrix);
-                
+                }                
                 obj.setVertexes(this.programInfo);
     
                 this.gl.activeTexture(this.gl.TEXTURE0);
@@ -422,7 +409,7 @@ class Scene {
                 
                 this.gl.uniform3fv(this.programInfo.uniformLocations.lightDirection, lightDirection);
 
-                this.gl.uniform3fv(this.programInfo.uniformLocations.headlights, [trainCenter[2]+11.0, trainCenter[1], -15.0]);
+                this.gl.uniform3fv(this.programInfo.uniformLocations.headlights, [trainCenter[0]+9, trainCenter[1], trainCenter[2]]);
                 
                 this.gl.uniform1i(this.programInfo.uniformLocations.ambientLightToggle, ambientLightToggle.checked);
                 this.gl.uniform1i(this.programInfo.uniformLocations.spotlight1Toggle, spotlight1Toggle.checked);
@@ -461,12 +448,11 @@ class Scene {
 }
 
 lightDirection = [-30.0, 10.0, -30.0];
-trainCenter = [13.5, -4.1, -15];
-railwayCenter = [-5, -4.25, -20];
+trainCenter = [-14.5, -4.25, -13.6];
+railwayCenter = [-5, -4.25, -13.6];
 barrierCenter = [7, -3.95, -14];
 lampCenter = [5, -4.95, -20];
 lampCenter2 = [-7, -4.95, -20];
-stopTraffic=false;
 
 function isPowerOf2(value) {
     return (value & (value - 1)) === 0;
